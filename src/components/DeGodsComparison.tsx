@@ -154,7 +154,7 @@ const DeGodsComparison: React.FC = () => {
       </div>
 
       {/* Attribution */}
-      <p className="text-center text-gray-500 mt-18 text-[18px] font-bold">
+      <p className="text-center text-gray-500 mt-8 md:mt-18 text-[14px] md:text-[18px] font-bold">
         Created by{' '}
         <a href="https://twitter.com/0x_saddy" target="_blank" rel="noopener noreferrer" className="underline">@0x_saddy</a>,{' '}
         <a href="https://twitter.com/capsjpeg" target="_blank" rel="noopener noreferrer" className="underline">@capsjpeg</a>,{' '}
