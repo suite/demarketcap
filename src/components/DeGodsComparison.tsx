@@ -21,30 +21,25 @@ const DeGodsComparison: React.FC = () => {
         // Fetch market cap
         const mcapResponse = await fetch('https://api.oauth.dustlabs.com/pricing/marketcap');
         const mcapData = await mcapResponse.json();
-        console.log('Market cap data:', mcapData); // Debug: Log market cap data
 
         if (mcapData.success) {
           const mcap = mcapData.mcap;
           setMarketCap(mcap);
           setFormattedMarketCap((mcap / 1000000).toFixed(0) + 'M');
-          console.log('Formatted market cap:', (mcap / 1000000).toFixed(0) + 'M'); // Debug: Log formatted market cap
         }
 
         // Fetch CSV data
         const csvResponse = await fetch('/mcap_data.csv');
         const csvText = await csvResponse.text();
-        console.log('CSV text:', csvText); // Debug: Log raw CSV text
 
         Papa.parse(csvText, {
           complete: (results) => {
-            console.log('Parsed CSV data:', results.data); // Debug: Log parsed CSV data
             const parsedData: ComparisonData[] = results.data.map((row: any) => ({
               value: parseFloat(row.value.replace(/,/g, '')),
               comparison: row.comparison,
               category: row.catagory, // Note: Fix typo in CSV header if possible
               imageLink: row['image link'],
             })).sort((a, b) => a.value - b.value);
-            console.log('Processed comparison data:', parsedData); // Debug: Log processed comparison data
             setComparisonData(parsedData);
           },
           header: true,
@@ -54,7 +49,6 @@ const DeGodsComparison: React.FC = () => {
         const date = new Date();
         const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'long', day: 'numeric' };
         const formattedDate = date.toLocaleDateString('en-US', options);
-        console.log('Current date:', formattedDate); // Debug: Log formatted date
         setCurrentDate(formattedDate);
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -87,17 +81,27 @@ const DeGodsComparison: React.FC = () => {
           On <span className="text-[#1E30D8]">{currentDate},</span>
         </h2>
         <h3 className="font-figtree font-bold text-[26px] leading-[28px] mb-2 text-center">
-          <span className="underline">DeGods</span> market cap is <span className="text-[#1E30D8]">${formattedMarketCap}</span>
+          <a
+            href="https://de.xyz"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="underline hover:text-[#1E30D8] transition-colors duration-300"
+          >
+            DeGods
+          </a>
+          {' '}market cap is <span className="text-[#1E30D8]">${formattedMarketCap}</span>
         </h3>
         <p className="font-figtree font-bold mb-8 text-center text-[26px] leading-[28px]">
-          or the {currentComparison.category} of...
+          or the {currentComparison.category}...
         </p>
         <div className="flex flex-col items-center">
           <img src={currentComparison.imageLink} alt={currentComparison.comparison} className="w-32 h-32 mb-2" />
           <h4 className="font-figtree font-bold text-[26px] text-center mb-1">{currentComparison.comparison}</h4>
-          <p className="font-figtree font-bold text-[#1E30D8] text-[16px] text-center">${currentComparison.value.toLocaleString()} USD</p>
+          <p className="font-figtree font-bold text-[#1E30D8] text-[16px] text-center">
+            ${Math.round(currentComparison.value / 1000000)} Million USD
+          </p>
         </div>
-        <div className="flex justify-center mt-4 space-x-2">
+        <div className="flex justify-center mt-10 space-x-2">
           {getComparisonImages().map((item, index) => (
             <img 
               key={index}
@@ -116,19 +120,29 @@ const DeGodsComparison: React.FC = () => {
             On <span className="text-[#1E30D8]">{currentDate},</span>
           </h2>
           <h3 className="font-figtree font-bold text-[40px] leading-[30px] mb-4">
-            <span className="underline">DeGods</span> market cap is <span className="text-[#1E30D8]">${formattedMarketCap}</span>
+            <a
+              href="https://de.xyz"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="underline hover:text-[#1E30D8] transition-colors duration-300"
+            >
+              DeGods
+            </a>
+            {' '}market cap is <span className="text-[#1E30D8]">${formattedMarketCap}</span>
           </h3>
           <p className="font-figtree font-bold text-[40px] leading-[30px]">
-            or the {currentComparison.category} of...
+            or the {currentComparison.category}...
           </p>
         </div>
         <div className="flex flex-col items-center">
           <img src={currentComparison.imageLink} alt={currentComparison.comparison} className="w-48 h-48 mb-4" />
           <h4 className="font-figtree font-bold text-[40px] text-center mb-1">{currentComparison.comparison}</h4>
-          <p className="font-figtree font-bold text-[24px] text-[#1E30D8] text-center">${currentComparison.value.toLocaleString()} USD</p>
+          <p className="font-figtree font-bold text-[24px] text-[#1E30D8] text-center">
+            ${Math.round(currentComparison.value / 1000000)} Million USD
+          </p>
         </div>
         <div className="absolute right-8 top-1/2 transform -translate-y-1/2 space-y-4">
-          {getComparisonImages().map((item, index) => (
+          {getComparisonImages().reverse().map((item, index) => (
             <img 
               key={index}
               src={item.imageLink} 
